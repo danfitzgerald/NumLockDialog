@@ -6,7 +6,8 @@ from ctypes import wintypes
 from win32con import VK_NUMLOCK
 import win32con
 import logging
-import tkTest
+import tknumlock
+from threading import Thread
 
 byref = ctypes.byref
 user32 = ctypes.windll.user32
@@ -14,6 +15,15 @@ MSG_ID_NUM_LOCK = 1
 
 
 def main():
+    tk = tknumlock.NumLockTk()
+    tk.initialize()
+
+    # Tk requires to be run on main thread therefore hot key "watchdog" must be run on a separate thread.
+    Thread(target=(lambda: register_hot_key(tk))).start()
+    tk.mainloop()
+
+
+def register_hot_key(tk):
     # Register Num Lock as hot key.
     # Reference: http://timgolden.me.uk/python/win32_how_do_i/catch_system_wide_hotkeys.html
     logging.log(logging.DEBUG, "Registering num lock as hot key.")
@@ -24,7 +34,7 @@ def main():
         while user32.GetMessageA(byref(msg), None, 0, 0) != 0:
             if msg.message == win32con.WM_HOTKEY:
                 if msg.wParam == MSG_ID_NUM_LOCK:
-                    tkTest.show_num_lock_diag(is_num_lock_on())
+                    tknumlock.show_num_lock_diag(tk, is_num_lock_on())
 
     finally:
         pass
