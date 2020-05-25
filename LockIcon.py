@@ -16,8 +16,6 @@ MSG_ID_NUM_LOCK = 1
 
 def main():
     tk = tknumlock.NumLockTk()
-    tk.initialize()
-
     # Tk requires to be run on main thread therefore hot key "watchdog" must be run on a separate thread.
     Thread(target=(lambda: register_hot_key(tk))).start()
     tk.mainloop()
@@ -34,7 +32,7 @@ def register_hot_key(tk):
         while user32.GetMessageA(byref(msg), None, 0, 0) != 0:
             if msg.message == win32con.WM_HOTKEY:
                 if msg.wParam == MSG_ID_NUM_LOCK:
-                    tknumlock.show_num_lock_diag(tk, is_num_lock_on())
+                    tk.show(is_num_lock_on())
 
     finally:
         pass
