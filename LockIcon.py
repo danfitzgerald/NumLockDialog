@@ -1,5 +1,4 @@
 # Copyright (C) 2020 Daniel Fitzgerald
-# TODO: Pick a project name and update README.md to include project name.
 
 import ctypes
 from ctypes import wintypes
