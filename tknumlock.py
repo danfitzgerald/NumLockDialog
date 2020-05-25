@@ -27,7 +27,7 @@ class NumLockTk(Tk):
         self.overrideredirect(True)
         self.geometry("263x263")  # Image dimensions TODO: un-hardcode
         self.lift()
-        self.wm_attributes("-topmost", False)
+        self.wm_attributes("-topmost", True)
         self.wm_attributes("-disabled", True)
         self.wm_attributes("-transparentcolor", "#c200c2")  # Fuscia
         self.wm_attributes("-alpha", 0.75)
