@@ -11,3 +11,7 @@ NumLockDialog only supports Windows operating systems.
 NumLockDialog interfaces with [Win32 API](https://docs.microsoft.com/en-us/windows/win32/)
 via the Python module [`ctypes`](https://docs.python.org/3/library/ctypes.html)
 to watch when a user presses the `Num Lock` key.
+
+## See it in action:
+
+![gif screencapture](screencapture.gif)
