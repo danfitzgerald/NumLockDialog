@@ -5,6 +5,10 @@ from tkinter import PhotoImage
 NUM_LOCK_ON_PATH = 'images/NumLockOn.png'
 NUM_LOCK_OFF_PATH = 'images/NumLockOff.png'
 
+FULL_ALPHA = .75  # Alpha value when dialog is visible
+DELTA_ALPHA = .05  # Change in alpha when fading out
+TIMESTEP_ALPHA = 25  # Time between alpha step when fading out
+
 
 class NumLockTk(Tk):
     def __init__(self, toggleState=True):
@@ -15,13 +19,14 @@ class NumLockTk(Tk):
 
         self._toggle_state = toggleState
         self._hide_calls = 0
+        self._num_lock_presses = 0
 
         self.overrideredirect(True)
         self.lift()
         self.wm_attributes("-topmost", False)
         self.wm_attributes("-disabled", True)
         self.wm_attributes("-transparentcolor", "#c200c2")  # Fuscia
-        self.wm_attributes("-alpha", 0.75)
+        self.attributes("-alpha", FULL_ALPHA)
         self['bg'] = '#c200c2'
 
         self._img_on = PhotoImage(file=NUM_LOCK_ON_PATH)
@@ -45,8 +50,20 @@ class NumLockTk(Tk):
     def request_hide(self):
         """Prevent odd behaviour when Num Lock is toggled in rapid sequence."""
         self._hide_calls -= 1
-        if self._hide_calls < 1:
-            self.hide()
+        self.fade_out()  # The fade_out function verifies _hide_calls is <1 therefore redundancy here is unnecessary.
+
+    def fade_out(self):
+        """Recursive call to initiate fade-out sequence."""
+        if self._hide_calls < 1:  # Check if user pressed num lock during fade-out sequence.
+            alpha = self.attributes('-alpha')
+            next_alpha = alpha - DELTA_ALPHA
+            if next_alpha > 0:
+                self.attributes('-alpha', next_alpha)
+                self.after(TIMESTEP_ALPHA, self.fade_out)  # Recursive function.
+            else:
+                self.hide()
+        else:  # Only called if user presses num lock before self.hide() is called.
+            self.attributes('-alpha', FULL_ALPHA)  # Reset alpha to initial value.
 
     def hide(self):
         """Hide window from user."""
@@ -57,6 +74,7 @@ class NumLockTk(Tk):
 
         :param toggle_state: State of num lock key.
         """
+        self.attributes('-alpha', FULL_ALPHA)
         self._toggle_state = toggle_state
         if toggle_state:
             self._label['image'] = self._img_on
