@@ -15,7 +15,7 @@ MSG_ID_NUM_LOCK = 1
 
 def main():
     tk = tknumlock.NumLockTk()
-    # Tk requires to be run on main thread therefore hot key "watchdog" must be run on a separate thread.
+    # Tk requires to run on main thread, therefore hot key messenger must run on a separate thread.
     Thread(target=(lambda: register_hot_key(tk))).start()
     tk.mainloop()
 

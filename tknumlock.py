@@ -1,9 +1,10 @@
 # Copyright (C) 2020 Daniel Fitzgerald
 from tkinter import *
 from tkinter import PhotoImage
+import os
 
-NUM_LOCK_ON_PATH = 'images/NumLockOn.png'
-NUM_LOCK_OFF_PATH = 'images/NumLockOff.png'
+NUM_LOCK_ON_PATH = os.path.join('images', 'NumLockOn.png')
+NUM_LOCK_OFF_PATH = os.path.join('images', 'NumLockOff.png')
 
 FULL_ALPHA = .75  # Alpha value when dialog is visible
 DELTA_ALPHA = .05  # Change in alpha when fading out
